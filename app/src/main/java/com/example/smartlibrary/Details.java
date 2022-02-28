@@ -53,7 +53,7 @@ public class Details extends AppCompatActivity {
 
         mRequestQueue = Volley.newRequestQueue(Details.this);
         mRequestQueue.getCache().clear();
-        String url = "https://www.googleapis.com/books/v1/volumes?q=" + book + "&key=AIzaSyAHpaD35UxvdJMqI_JB6cjH5QtI6hDHrYk";
+        String url = "https://www.googleapis.com/books/v1/volumes?q=" + book + "&key=key";
         RequestQueue queue = Volley.newRequestQueue(Details.this);
         JsonObjectRequest booksObjrequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
