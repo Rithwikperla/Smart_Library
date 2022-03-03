@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent detailsIntent = new Intent( MainActivity.this,Details.class);
                 String book = BookName.getText().toString();
+                book = book.replace(" ","+");
                 if (BookName.getText().toString().isEmpty()) {
                     BookName.setError("Please enter search query");
                     return;

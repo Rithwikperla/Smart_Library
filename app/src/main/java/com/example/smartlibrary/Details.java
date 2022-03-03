@@ -2,6 +2,7 @@ package com.example.smartlibrary;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -43,6 +44,7 @@ public class Details extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         books_list = findViewById(R.id.Detailslist);
         rvlayout = findViewById(R.id.rvlayout);
+        books_list.setLayoutManager(new LinearLayoutManager(this));
         bookInfoArrayList = new ArrayList<>();
         adapter = new BookAdapter(bookInfoArrayList, Details.this);
         books_list.setAdapter(adapter);
@@ -53,7 +55,7 @@ public class Details extends AppCompatActivity {
 
         mRequestQueue = Volley.newRequestQueue(Details.this);
         mRequestQueue.getCache().clear();
-        String url = "https://www.googleapis.com/books/v1/volumes?q=" + book + "&key=AIzaSyAHpaD35UxvdJMqI_JB6cjH5QtI6hDHrYk";
+        String url = "https://www.googleapis.com/books/v1/volumes?q=" + book;
         RequestQueue queue = Volley.newRequestQueue(Details.this);
         JsonObjectRequest booksObjrequest = new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -64,21 +66,22 @@ public class Details extends AppCompatActivity {
                 try {
                     JSONArray itemsArray = response.getJSONArray("items");
                     for (int i = 0; i < itemsArray.length(); i++) {
+                        Toast.makeText(Details.this, "Items list " + itemsArray.length(), Toast.LENGTH_SHORT).show();
                         JSONObject itemsObj = itemsArray.getJSONObject(i);
                         JSONObject volumeObj = itemsObj.getJSONObject("volumeInfo");
-                        String title = volumeObj.getString("title");
-                        String subtitle = volumeObj.getString("subtitle");
+                        String title = volumeObj.optString("title");
+                        String subtitle = volumeObj.optString("subtitle");
                         JSONArray authorsArray = volumeObj.getJSONArray("authors");
-                        String publisher = volumeObj.getString("publisher");
-                        String publishedDate = volumeObj.getString("publishedDate");
-                        String description = volumeObj.getString("description");
-                        int pageCount = volumeObj.getInt("pageCount");
+                        String publisher = volumeObj.optString("publisher");
+                        String publishedDate = volumeObj.optString("publishedDate");
+                        String description = volumeObj.optString("description");
+                        int pageCount = volumeObj.optInt("pageCount");
                         JSONObject imageLinks = volumeObj.getJSONObject("imageLinks");
-                        String thumbnail = imageLinks.getString("thumbnail");
-                        String previewLink = volumeObj.getString("previewLink");
-                        String infoLink = volumeObj.getString("infoLink");
+                        String thumbnail = imageLinks.optString("thumbnail");
+                        String previewLink = volumeObj.optString("previewLink");
+                        String infoLink = volumeObj.optString("infoLink");
                         JSONObject saleInfoObj = itemsObj.getJSONObject("saleInfo");
-                        String buyLink = saleInfoObj.getString("buyLink");
+                        String buyLink = saleInfoObj.optString("buyLink");
                         ArrayList<String> authorsArrayList = new ArrayList<>();
                         if (authorsArray.length() != 0) {
                             for (int j = 0; j < authorsArray.length(); j++) {
@@ -87,7 +90,6 @@ public class Details extends AppCompatActivity {
                         }
                         BookInfo bookInfo = new BookInfo(title, subtitle, authorsArrayList, publisher, publishedDate, description, pageCount, thumbnail, previewLink, infoLink, buyLink);
                         bookInfoArrayList.add(bookInfo);
-
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
