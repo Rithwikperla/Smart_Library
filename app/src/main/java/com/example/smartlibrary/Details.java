@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -19,6 +20,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,6 +31,7 @@ public class Details extends AppCompatActivity {
     String bookName;
     private RequestQueue mRequestQueue;
     private ArrayList<BookInfo> bookInfoArrayList;
+    private ImageView bookimage;
     private ProgressBar progressBar;
     private BookAdapter bookadapter;
     private RecyclerView books_list;
@@ -40,6 +44,7 @@ public class Details extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         setContentView(R.layout.activity_details);
         Intent intent = getIntent();
+        bookimage = findViewById(R.id.bookimg);
         bookName = intent.getStringExtra("key");
         progressBar = findViewById(R.id.progressBar);
         books_list = findViewById(R.id.Detailslist);
@@ -78,6 +83,7 @@ public class Details extends AppCompatActivity {
                         int pageCount = volumeObj.optInt("pageCount");
                         JSONObject imageLinks = volumeObj.getJSONObject("imageLinks");
                         String thumbnail = imageLinks.optString("thumbnail");
+                        thumbnail = thumbnail.replaceAll("http","https");
                         String previewLink = volumeObj.optString("previewLink");
                         String infoLink = volumeObj.optString("infoLink");
                         JSONObject saleInfoObj = itemsObj.getJSONObject("saleInfo");
